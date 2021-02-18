@@ -55,7 +55,7 @@ async def update(ctx, site, url):
             print(f'price: {price}', f'now {price2}' if price2 else '')
             print(f'stocks: {stock}')
 
-            ctx.send(f'description: {title} \n\n price: {price2} now {price}' if price2 else f'price: {price}')
+            await ctx.send(f'description: {title} \n\n price: {price2} now {price}' if price2 else f'price: {price}')
 
         if site == 'lazada':
             try:
@@ -69,12 +69,16 @@ async def update(ctx, site, url):
                 print(f'description: {title}')
                 print(f'price: {orig_price} now {price}' if orig_price else f'price: {price}')
 
-                ctx.send(f'description: {title} \n\n price: {orig_price} now {price}' if orig_price else f'price: {price}')
+                await ctx.send(f'description: {title} \n\n price: {orig_price} now {price}' if orig_price else f'price: {price}')
 
             except Exception as e:
                 print(e)
                 with open('lazada.html', 'wb') as f:
                     f.write(page.content)
+
+@bot.command()
+async def ping(ctx):
+    await ctx.send('pong')
 
 def track():
     pass
