@@ -40,7 +40,7 @@ async def on_ready():
 
 
 @bot.command()
-async def update(url, site):
+async def update(ctx, site, url):
     if page := await open_site(url):
     
         if site == 'shopee':        
@@ -55,6 +55,8 @@ async def update(url, site):
             print(f'price: {price}', f'now {price2}' if price2 else '')
             print(f'stocks: {stock}')
 
+            ctx.send(f'description: {title} \n\n price: {price2} now {price}' if price2 else f'price: {price}')
+
         if site == 'lazada':
             try:
                 soup = BeautifulSoup(page.content, 'html.parser')
@@ -66,6 +68,9 @@ async def update(url, site):
                 
                 print(f'description: {title}')
                 print(f'price: {orig_price} now {price}' if orig_price else f'price: {price}')
+
+                ctx.send(f'description: {title} \n\n price: {orig_price} now {price}' if orig_price else f'price: {price}')
+
             except Exception as e:
                 print(e)
                 with open('lazada.html', 'wb') as f:
@@ -74,5 +79,4 @@ async def update(url, site):
 def track():
     pass
 
-loop.run_until_complete(update(input(''), 'lazada'))
-# bot.run(BOT_TOKEN)
+bot.run(BOT_TOKEN)
