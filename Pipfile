@@ -5,6 +5,9 @@ name = "pypi"
 
 [packages]
 "discord.py" = "*"
+requests = "*"
+beautifulsoup4 = "*"
+requests-html = "*"
 
 [dev-packages]
 

@@ -1,16 +1,35 @@
-import discord, os, random
+import discord, os, random, requests, asyncio
 from discord.ext import commands
+from bs4 import BeautifulSoup
+from requests_html import AsyncHTMLSession, HTML
 
 description = '''A Bot to monitor stocks,
 made for an Upwork job.'''
 
 BOT_TOKEN = os.environ['BOT_TOKEN']
-command_prefix = ('??')
 
 intents = discord.Intents.default()
 intents.members = True
 
 bot = commands.Bot(command_prefix='?', description=description, intents=intents)
+
+loop = asyncio.get_event_loop()
+
+#  -----------------------------------------------------------
+async def open_site(url):
+    for _ in range(3):
+        try:
+            asession = AsyncHTMLSession()
+            page = await asession.get(url)
+            await page.html.arender()
+            return page
+        except Exception:
+            pass
+    return None
+
+
+# ------------------------------------------------------------
+
 
 @bot.event
 async def on_ready():
@@ -19,18 +38,41 @@ async def on_ready():
     print(bot.user.id)
     print('------')
 
+
 @bot.command()
-async def roll(ctx, dice: str):
-    """Rolls a dice in NdN format."""
-    try:
-        rolls, limit = map(int, dice.split('d'))
-    except Exception:
-        await ctx.send('Format has to be in NdN!')
-        return
+async def update(url, site):
+    if page := await open_site(url):
+    
+        if site == 'shopee':        
+            details = page.html.find('.wPNuIn', first=True)
+            soup = BeautifulSoup(details.html, 'html.parser')
+            title = soup.find('div').find('span').text
+            price = soup.find('div', class_='bBOoii').text
+            price2 = soup.find('div', class_='AJyN7v').text
+            stock = soup.find('div', class_='_2_ItKR').find_all('div')[-1].text
 
-    result = ', '.join(str(random.randint(1, limit)) for r in range(rolls))
-    await ctx.send(result)
+            print(f'description: {title}')
+            print(f'price: {price}', f'now {price2}' if price2 else '')
+            print(f'stocks: {stock}')
 
+        if site == 'lazada':
+            try:
+                soup = BeautifulSoup(page.content, 'html.parser')
+                title = soup.find('div', id="module_product_title_1").text
+                price = soup.find('span', class_='pdp-price_type_normal').text
+                orig_price = None
+                if deleted_price := soup.find('span', class_='pdp-price_type_deleted'):
+                    orig_price = deleted_price.text
+                
+                print(f'description: {title}')
+                print(f'price: {orig_price} now {price}' if orig_price else f'price: {price}')
+            except Exception as e:
+                print(e)
+                with open('lazada.html', 'wb') as f:
+                    f.write(page.content)
 
-if __name__ == '__main__':
-    bot.run(BOT_TOKEN)
+def track():
+    pass
+
+loop.run_until_complete(update(input(''), 'lazada'))
+# bot.run(BOT_TOKEN)
