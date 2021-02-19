@@ -13,15 +13,18 @@ intents.members = True
 
 bot = commands.Bot(command_prefix='?', description=description, intents=intents)
 
-loop = asyncio.get_event_loop()
+# loop = asyncio.get_event_loop()
 
 #  -----------------------------------------------------------
-async def open_site(url):
+async def open_site(ctx, url):
     for _ in range(3):
         try:
             asession = AsyncHTMLSession()
+            await ctx.send('session start')
             page = await asession.get(url)
+            await ctx.send('get')
             await page.html.arender()
+            await ctx.send('render')
             return page
         except Exception:
             pass
@@ -42,7 +45,7 @@ async def on_ready():
 @bot.command()
 async def update(ctx, site, url):
     await ctx.send('opening site')
-    if page := await open_site(url):
+    if page := await open_site(ctx, url):
         await ctx.send('site opened and rendered')
     
         if site == 'shopee':
