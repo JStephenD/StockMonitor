@@ -41,9 +41,13 @@ async def on_ready():
 
 @bot.command()
 async def update(ctx, site, url):
+    await ctx.send('opening site')
     if page := await open_site(url):
+        await ctx.send('site opened and rendered')
     
-        if site == 'shopee':        
+        if site == 'shopee':
+            await ctx.send('shopee detected')
+
             details = page.html.find('.wPNuIn', first=True)
             soup = BeautifulSoup(details.html, 'html.parser')
             title = soup.find('div').find('span').text
@@ -58,6 +62,7 @@ async def update(ctx, site, url):
             await ctx.send(f'description: {title} \n\n price: {price2} now {price}' if price2 else f'price: {price}')
 
         if site == 'lazada':
+            await ctx.send('lazada detected')
             try:
                 soup = BeautifulSoup(page.content, 'html.parser')
                 title = soup.find('div', id="module_product_title_1").text
