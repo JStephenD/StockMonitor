@@ -28,9 +28,7 @@ async def open_site(ctx, url):
             pages = await browser.pages()
             page = pages[0]
             await ctx.send('session start')
-            await page.goto(url, {
-                waitUntil: 'load'
-            })
+            await page.goto(url)
             await ctx.send('get')
             content = await page.content()
             await ctx.send('extracting html content')
