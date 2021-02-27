@@ -90,6 +90,8 @@ async def update(ctx, site, url):
             await ctx.send('lazada detected')            
             soup = BeautifulSoup(page, 'html.parser')
             details = soup.find('div', class_='pdp-block__product-detail')
+            print(details)
+            return
             price, price2 = None, None
 
             title = details.find('div', id="module_product_title_1").text
