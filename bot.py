@@ -100,12 +100,10 @@ async def update(ctx, site, url):
             
             print(f'description: {title}')
             print(f'price: {price}', f'now {price2}' if price2 else '')
-            print(f'stocks: {stock}')
 
             await ctx.send(
                 f'description: {title} \n' +
-                f'price: {price} now {price2}' if price2 else f'price: {price}' + '\n' +
-                f'stocks: {stock}'
+                f'price: {price} now {price2}' if price2 else f'price: {price}'
             )
     else:
         await ctx.send('error opening page')
