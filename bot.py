@@ -55,13 +55,6 @@ async def update(ctx, site, url):
     await ctx.send('opening site')
     if page := await open_site(ctx, url):
         await ctx.send('site opened and rendered')
-
-        
-
-        # soup = BeautifulSoup(page, 'html.parser')
-        # s = soup.find('div', class_='_3ZV7fL')
-        # print(s)
-    
         if site == 'shopee':
             await ctx.send('shopee detected')
 
@@ -72,11 +65,11 @@ async def update(ctx, site, url):
             #     print(e)
 
             soup = BeautifulSoup(page, 'html.parser')
-            details = soup.find('div', class_='_3iw7jx')
+            details = soup.find('div', class_='wPNuIn')
             price, price2 = None, None
 
 
-            title = details.find('div', class_='_3ZV7fL').find('span').text
+            title = details.find('div', class_='_3ZV7fL').text
             if price_div := details.find('div', class_='bBOoii'):
                 price = price_div.text
             if price2_div := details.find('div', class_='AJyN7v'):
@@ -87,7 +80,10 @@ async def update(ctx, site, url):
             print(f'price: {price}', f'now {price2}' if price2 else '')
             print(f'stocks: {stock}')
 
-            await ctx.send(f'description: {title} \n\n price: {price2} now {price}' if price2 else f'price: {price}')
+            await ctx.send(
+            f'description: {title} \n \
+                price: {price2} now {price}' if price2 else f'price: {price} \n \
+                stocks: {stock}')
 
         if site == 'lazada':
             await ctx.send('lazada detected')
