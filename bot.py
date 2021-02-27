@@ -82,29 +82,31 @@ async def update(ctx, site, url):
 
             await ctx.send(
                 f'description: {title} \n' +
-                f'price: {price2} now {price}' if price2 else f'price: {price}' + '\n' +
-                f'stocks: {stock}
+                f'price: {price} now {price2}' if price2 else f'price: {price}' + '\n' +
+                f'stocks: {stock}'
             )
 
         if site == 'lazada':
-            await ctx.send('lazada detected')
-            try:
-                soup = BeautifulSoup(page, 'html.parser')
-                title = soup.find('div', id="module_product_title_1").text
-                price = soup.find('span', class_='pdp-price_type_normal').text
-                orig_price = None
-                if deleted_price := soup.find('span', class_='pdp-price_type_deleted'):
-                    orig_price = deleted_price.text
-                
-                print(f'description: {title}')
-                print(f'price: {orig_price} now {price}' if orig_price else f'price: {price}')
+            await ctx.send('lazada detected')            
+            soup = BeautifulSoup(page, 'html.parser')
+            details = soup.find('div', class_='pdp-block__product-detail')
+            price, price2 = None, None
 
-                await ctx.send(f'description: {title} \n\n price: {orig_price} now {price}' if orig_price else f'price: {price}')
+            title = details.find('div', id="module_product_title_1").text
+            if price_div := details.find('span', class_='pdp-price_type_normal'):
+                price = price_div.text
+            if price2_div := soup.find('span', class_='pdp-price_type_deleted'):
+                price2 = price2_div.text
+            
+            print(f'description: {title}')
+            print(f'price: {price}', f'now {price2}' if price2 else '')
+            print(f'stocks: {stock}')
 
-            except Exception as e:
-                print(e)
-                with open('lazada.html', 'wb') as f:
-                    f.write(page.content)
+            await ctx.send(
+                f'description: {title} \n' +
+                f'price: {price} now {price2}' if price2 else f'price: {price}' + '\n' +
+                f'stocks: {stock}'
+            )
     else:
         await ctx.send('error opening page')
 
