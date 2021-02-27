@@ -20,6 +20,7 @@ async def open_site(ctx, url):
         try:
             browser = await launch(headless=True, 
                 args=[
+                    '--incognito',
                     '--no-sandbox',
                     '--disable-setuid-sandbox'
                 ]
@@ -27,7 +28,9 @@ async def open_site(ctx, url):
             pages = await browser.pages()
             page = pages[0]
             await ctx.send('session start')
-            await page.goto(url)
+            await page.goto(url, {
+                waitUntil: 'networkidle2'
+            })
             await ctx.send('get')
             content = await page.content()
             await ctx.send('extracting html content')
@@ -65,9 +68,7 @@ async def update(ctx, site, url):
             #     print(e)
 
             soup = BeautifulSoup(page, 'html.parser')
-            details = soup.find('div', class_='product-briefing')
-            print(details)
-            return
+            details = soup.find('div', class_='wPNuIn')
             price, price2 = None, None
 
 
