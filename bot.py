@@ -29,7 +29,7 @@ async def open_site(ctx, url):
             page = pages[0]
             await ctx.send('session start')
             await page.goto(url, {
-                waitUntil: 'domcontentloaded'
+                waitUntil: 'load'
             })
             await ctx.send('get')
             content = await page.content()
