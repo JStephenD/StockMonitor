@@ -66,6 +66,8 @@ async def update(ctx, site, url):
 
             soup = BeautifulSoup(page, 'html.parser')
             details = soup.find('div', class_='wPNuIn')
+            print(details)
+            return
             price, price2 = None, None
 
 
