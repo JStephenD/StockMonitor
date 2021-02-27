@@ -81,9 +81,10 @@ async def update(ctx, site, url):
             print(f'stocks: {stock}')
 
             await ctx.send(
-            f'description: {title} \n \
-                price: {price2} now {price}' if price2 else f'price: {price} \n \
-                stocks: {stock}')
+                f'description: {title} \n' +
+                f'price: {price2} now {price}' if price2 else f'price: {price}' + '\n' +
+                f'stocks: {stock}
+            )
 
         if site == 'lazada':
             await ctx.send('lazada detected')
