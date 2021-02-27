@@ -71,7 +71,6 @@ async def update(ctx, site, url):
             details = soup.find('div', class_='wPNuIn')
             price, price2 = None, None
 
-
             title = details.find('div', class_='_3ZV7fL').text
             if price_div := details.find('div', class_='bBOoii'):
                 price = price_div.text
@@ -107,6 +106,8 @@ async def update(ctx, site, url):
                 print(e)
                 with open('lazada.html', 'wb') as f:
                     f.write(page.content)
+    else:
+        await ctx.send('error opening page')
 
 @bot.command()
 async def ping(ctx):
